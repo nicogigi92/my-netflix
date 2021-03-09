@@ -1,0 +1,84 @@
+version: '3.7'
+
+services:
+  
+  reverse-proxy:
+    image: traefik:v2.3
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config:/etc/traefik/config
+      - ./config/traefik.yml:/etc/traefik/traefik.yml
+      - ./traefik_letsencrypt/:/etc/traefik/traefik_letsencrypt/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.routerDash.rule=Host(`www.mydns.ex`)"
+      - "traefik.http.routers.routerDash.entrypoints=web,websecure"
+      - "traefik.http.routers.routerDash.tls=true"
+      - "traefik.http.routers.routerDash.tls.certresolver=mycertresolver"
+      - "traefik.http.routers.routerDash.service=api@internal"
+      - "traefik.http.routers.routerDash.middlewares=ipwhitelist@file"
+
+  web:
+    image: nginx:alpine
+    restart: always
+    volumes:
+      - ./app:/usr/share/nginx/html 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.routerWeb.rule=Host(`web.mydns.ex`)"
+      - "traefik.http.routers.routerWeb.entrypoints=web,websecure"
+      - "traefik.http.routers.routerWeb.tls=true"
+      - "traefik.http.routers.routerWeb.tls.certresolver=mycertresolver"
+      - "traefik.http.routers.routerWeb.middlewares=ipwhitelist@file"
+      - "traefik.http.routers.routerWeb.service=serviceWeb"
+      - "traefik.http.services.serviceWeb.loadbalancer.server.port=80"
+      - "traefik.http.services.serviceWeb.loadbalancer.server.scheme=http"
+ 
+
+  rutorrent:
+    image: ghcr.io/linuxserver/rutorrent
+    restart: always
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes : 
+      - ./rutorrent/config:/config
+      - ./rutorrent/downloads:/downloads
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.routerTorrent.rule=Host(`torrent.mydns.ex`)"
+      - "traefik.http.routers.routerTorrent.entrypoints=web,websecure"
+      - "traefik.http.routers.routerTorrent.tls=true"
+      - "traefik.http.routers.routerTorrent.tls.certresolver=mycertresolver"
+      - "traefik.http.routers.routerTorrent.middlewares=ipwhitelist@file"
+      - "traefik.http.routers.routerTorrent.service=serviceTorrent"
+      - "traefik.http.services.serviceTorrent.loadbalancer.server.port=80"
+      - "traefik.http.services.serviceTorrent.loadbalancer.server.scheme=http"
+ 
+
+  emby:
+    image: ghcr.io/linuxserver/emby
+    restart: always
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+        - ./rutorrent/downloads/completed:/data/movies
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.routerEmby.rule=Host(`emby.mydns.ex`)"
+      - "traefik.http.routers.routerEmby.entrypoints=web,websecure"
+      - "traefik.http.routers.routerEmby.tls=true"
+      - "traefik.http.routers.routerEmby.tls.certresolver=mycertresolver"
+      - "traefik.http.routers.routerEmby.middlewares=ipwhitelist@file"
+      - "traefik.http.routers.routerEmby.service=serviceEmby"
+      - "traefik.http.services.serviceEmby.loadbalancer.server.port=8096"
+      - "traefik.http.services.serviceEmby.loadbalancer.server.scheme=http"
+ 
+
+
