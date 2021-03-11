@@ -1,6 +1,6 @@
 __my-netflix__  
 
-Here is my docker and traefik config files. They allow to run a seedbox on a remote server, with an emby app to watch your content remotely.   
+Here is my docker and traefik config files. They enable to run a seedbox on a remote server, with an emby app to watch your content remotely.   
 
 * My config :  
   Debian 9.0  
