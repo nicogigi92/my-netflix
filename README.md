@@ -18,10 +18,10 @@ You also need DNS pointing on your server :
   torrent.mydns.ex  
   web.mydns.ex  
 
-After cloning the repo, you will have to adapt few things in files.  
+After cloning the repo, you will have to adapt few things in files :  
 
-Change *mydns.ex* by your own dns.
-Put your *email* adress for acme challenge (letsencrypt certificate)  
+Change *mydns.ex* by your own dns.  
+Put your *email* adress for acme challenge (letsencrypt certificate).  
 Add your ip adress into the ip whitelist.  
 
 Maybe you will have to create two directories :  
