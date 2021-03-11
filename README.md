@@ -28,3 +28,5 @@ Add your ip adress into the ip whitelist.
   
   mkdir rutorrent  
   mkdir traefik_letsencrypt   
+
+* Actually, the infrastrucutre is not completely finished, the https is not fully operationnal. But it remains usable.
