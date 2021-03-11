@@ -21,12 +21,12 @@ https://docs.docker.com/compose/install/
 * After cloning the repo, you will have to adapt few things in files :  
 
 Change *mydns.ex* by your own dns.  
-Put your *email* adress for acme challenge (letsencrypt certificate).  
-Add your ip adress into the ip whitelist.  
+Put your *email* address for acme challenge (letsencrypt certificate).  
+Add your ip address into the ip whitelist.  
 
 * Maybe you will have to create two directories :  
   
   mkdir rutorrent  
   mkdir traefik_letsencrypt   
 
-* Actually, the infrastrucutre is not completely finished, the https is not fully operationnal. But it remains usable.
+* Actually, the infrastructure is not completely finished, the https is not fully operationnal. But it remains usable.
